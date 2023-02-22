@@ -1,0 +1,35 @@
+{
+	"name": "branch-deploy",
+	"version": "0.0.0",
+	"description": "Deploy by pushing a deploy* branch made simplier.",
+	"main": "index.js",
+	"type": "module",
+	"bin": "bin/index.js",
+	"scripts": {
+		"start": "node index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/FilipChalupa/branch-deploy.git"
+	},
+	"keywords": [
+		"deploy",
+		"helper",
+		"tool",
+		"git",
+		"branch"
+	],
+	"author": {
+		"name": "Filip Chalupa",
+		"email": "chalupa.filip@gmail.com",
+		"url": "https://www.npmjs.com/~onset"
+	},
+	"license": "ISC",
+	"devDependencies": {
+		"prettier": "^2.8.4"
+	},
+	"dependencies": {
+		"chalk": "^5.2.0",
+		"inquirer": "^9.1.4"
+	}
+}

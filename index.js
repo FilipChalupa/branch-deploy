@@ -8,7 +8,22 @@ import simpleGit from 'simple-git'
 const remoteName = 'origin'
 const branchNamePrefix = 'deploy'
 
-const git = simpleGit()
+const git = (() => {
+	try {
+		const git = simpleGit()
+		return git
+	} catch (error) {
+		console.error(
+			chalk.red(
+				`Cannot communicate with git properly. Do you have git installed? Are you running this command in a git repository?`,
+			),
+		)
+		if (typeof error.message === 'string') {
+			console.error(chalk.blackBright(error.message))
+		}
+		exit(1)
+	}
+})()
 
 // @TODO: check current working directory is git repository
 

@@ -30,6 +30,7 @@
 	},
 	"dependencies": {
 		"chalk": "^5.2.0",
-		"inquirer": "^9.1.4"
+		"inquirer": "^9.1.4",
+		"simple-git": "^3.16.1"
 	}
 }

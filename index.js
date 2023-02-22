@@ -25,13 +25,28 @@ const git = (() => {
 	}
 })()
 
-// @TODO: check current working directory is git repository
+try {
+	await git.status()
+} catch (error) {
+	console.error(
+		chalk.red(
+			`Something went wrong. Are you running this command in a git repository?`,
+		),
+	)
+	if (typeof error.message === 'string') {
+		console.error(chalk.blackBright(error.message))
+	}
+	exit(1)
+}
 
 const remoteBranches = (await git.branch(['-r'])).all.map((branch) =>
 	branch.startsWith(`${remoteName}/`)
 		? branch.substring(remoteName.length + 1)
 		: branch,
 )
+
+console.log('after branches')
+
 const deployBranches = remoteBranches.filter(
 	(branch) =>
 		branch === branchNamePrefix || branch.startsWith(`${branchNamePrefix}/`),

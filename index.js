@@ -45,8 +45,6 @@ const remoteBranches = (await git.branch(['-r'])).all.map((branch) =>
 		: branch,
 )
 
-console.log('after branches')
-
 const deployBranches = remoteBranches.filter(
 	(branch) =>
 		branch === branchNamePrefix || branch.startsWith(`${branchNamePrefix}/`),
@@ -55,18 +53,27 @@ const deployBranches = remoteBranches.filter(
 if (deployBranches.length === 0) {
 	console.error(
 		chalk.red(
-			`Not a single deploy branch found in "${remoteName}" starting with ${branchNamePrefix}.`,
+			`Not a single deploy branch found in ${chalk.magenta(
+				remoteName,
+			)} starting with ${chalk.magenta(branchNamePrefix)}.`,
 		),
 	)
 	exit(1)
 }
 
-const { targetBranches } = await inquirer.prompt({
-	type: 'checkbox',
-	name: 'targetBranches',
-	message: `Which branch do you want ${chalk.magenta('HEAD')} to push to?`,
-	choices: deployBranches,
-})
+const targetBranches =
+	deployBranches.length === 1
+		? deployBranches // @TODO: ask for confirmation
+		: (
+				await inquirer.prompt({
+					type: 'checkbox',
+					name: 'result',
+					message: `Which branch do you want ${chalk.magenta(
+						'HEAD',
+					)} to push to?`,
+					choices: deployBranches,
+				})
+		  ).result
 
 if (targetBranches.length === 0) {
 	console.log(chalk.yellow('No branch selected.'))
@@ -75,7 +82,9 @@ if (targetBranches.length === 0) {
 
 for (const targetBranch of targetBranches) {
 	console.log(
-		`Pushing ${chalk.magenta('HEAD')} to ${chalk.magenta(targetBranch)}…`,
+		`Pushing ${chalk.magenta('HEAD')} to branch ${chalk.magenta(
+			targetBranch,
+		)}…`,
 	)
 	await git.push(remoteName, `HEAD:${targetBranch}`)
 }

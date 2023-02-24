@@ -34,6 +34,12 @@ npx branch-deploy --all
 npx branch-deploy --prefix staging
 ```
 
+#### Use different source commit
+
+```bash
+npx branch-deploy --source 52ca70ea2076bd17aa93a5efceeda3a2834db801
+```
+
 #### Use different remote name
 
 ```bash

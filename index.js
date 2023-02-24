@@ -16,8 +16,9 @@ program
 
 program
 	.option('-a, --all', 'push to all deploy branches', false)
-	.option('-r, --remote <name>', 'remote name', 'origin')
 	.option('-p, --prefix <string>', 'filter branches by prefix', 'deploy')
+	.option('-r, --remote <name>', 'remote name', 'origin')
+	.option('-s, --source <hash>', 'commit hash to push', 'HEAD')
 
 program.parse(process.argv)
 
@@ -25,6 +26,7 @@ const options = program.opts()
 
 const remoteName = options.remote
 const branchNamePrefix = options.prefix
+const source = options.source
 
 const git = (() => {
 	try {
@@ -91,7 +93,7 @@ const targetBranches = await (async () => {
 		await inquirer.prompt({
 			type: 'checkbox',
 			name: 'result',
-			message: `Which branch do you want ${chalk.magenta('HEAD')} to push to?`,
+			message: `Which branch do you want ${chalk.magenta(source)} to push to?`,
 			choices: deployBranches,
 		})
 	).result
@@ -111,11 +113,11 @@ for (let i = 0; i < targetBranches.length; i++) {
 	const count =
 		targetBranches.length > 1 ? `[${i + 1}/${targetBranches.length}] ` : ''
 	console.log(
-		`${count}Pushing ${chalk.magenta('HEAD')} to branch ${chalk.magenta(
+		`${count}Pushing ${chalk.magenta(source)} to branch ${chalk.magenta(
 			targetBranch,
 		)}…`,
 	)
-	await git.push(remoteName, `HEAD:${targetBranch}`)
+	await git.push(remoteName, `${source}:${targetBranch}`)
 }
 
 console.log(chalk.green('Done. 🎉'))

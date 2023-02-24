@@ -14,6 +14,7 @@ program
 	.description('Makes deploy by push easier.')
 	.version(packageJson.version)
 
+program
 	.option('-a, --all', 'push to all deploy branches', false)
 	.option('-r, --remote <name>', 'remote name', 'origin')
 	.option('-p, --prefix <string>', 'filter branches by prefix', 'deploy')

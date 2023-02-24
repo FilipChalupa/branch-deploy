@@ -11,3 +11,5 @@ npx branch-deploy
 ```
 
 It will then find all branches named `deploy*` and let you choose which one to push to. It is usually useful if you have a CI that builds/deploys your project on push to that branch.
+
+![demo screencast](https://raw.githubusercontent.com/FilipChalupa/branch-deploy/HEAD/screencast.gif)

@@ -43,5 +43,5 @@ npx branch-deploy --source 52ca70ea2076bd17aa93a5efceeda3a2834db801
 #### Use different remote name
 
 ```bash
-npx branch-deploy --prefix not-origin
+npx branch-deploy --remote not-origin
 ```

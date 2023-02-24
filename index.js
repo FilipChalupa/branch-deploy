@@ -1,12 +1,29 @@
 import chalk from 'chalk'
+import { Command } from 'commander'
+import { readFile } from 'fs/promises'
 import inquirer from 'inquirer'
 import { exit } from 'process'
 import simpleGit from 'simple-git'
 
-// @TODO: configurable
+const packageJson = JSON.parse(await readFile('package.json', 'utf8'))
 
-const remoteName = 'origin'
-const branchNamePrefix = 'deploy'
+const program = new Command()
+
+program
+	.name('branch-deploy')
+	.description('Makes deploy by push easier.')
+	.version(packageJson.version)
+
+	.option('-a, --all', 'push to all deploy branches', false)
+	.option('-r, --remote <name>', 'remote name', 'origin')
+	.option('-p, --prefix <string>', 'filter branches by prefix', 'deploy')
+
+program.parse(process.argv)
+
+const options = program.opts()
+
+const remoteName = options.remote
+const branchNamePrefix = options.prefix
 
 const git = (() => {
 	try {
@@ -53,7 +70,7 @@ const deployBranches = remoteBranches.filter(
 if (deployBranches.length === 0) {
 	console.error(
 		chalk.red(
-			`Not a single deploy branch found in ${chalk.magenta(
+			`Not a single deploy branch found in remote ${chalk.magenta(
 				remoteName,
 			)} starting with ${chalk.magenta(branchNamePrefix)}.`,
 		),
@@ -61,28 +78,39 @@ if (deployBranches.length === 0) {
 	exit(1)
 }
 
-const targetBranches =
-	deployBranches.length === 1
-		? deployBranches // @TODO: ask for confirmation
-		: (
-				await inquirer.prompt({
-					type: 'checkbox',
-					name: 'result',
-					message: `Which branch do you want ${chalk.magenta(
-						'HEAD',
-					)} to push to?`,
-					choices: deployBranches,
-				})
-		  ).result
+const targetBranches = await (async () => {
+	if (deployBranches.length === 1) {
+		// @TODO: ask for confirmation
+		return deployBranches
+	}
+	if (options.all) {
+		return deployBranches
+	}
+	return (
+		await inquirer.prompt({
+			type: 'checkbox',
+			name: 'result',
+			message: `Which branch do you want ${chalk.magenta('HEAD')} to push to?`,
+			choices: deployBranches,
+		})
+	).result
+})()
 
 if (targetBranches.length === 0) {
 	console.log(chalk.yellow('No branch selected.'))
 	exit(0)
 }
 
-for (const targetBranch of targetBranches) {
+if (targetBranches.length > 1) {
+	console.log(`Pushing to ${chalk.magenta(targetBranches.length)} branches.`)
+}
+
+for (let i = 0; i < targetBranches.length; i++) {
+	const targetBranch = targetBranches[i]
+	const count =
+		targetBranches.length > 1 ? `[${i + 1}/${targetBranches.length}] ` : ''
 	console.log(
-		`Pushing ${chalk.magenta('HEAD')} to branch ${chalk.magenta(
+		`${count}Pushing ${chalk.magenta('HEAD')} to branch ${chalk.magenta(
 			targetBranch,
 		)}…`,
 	)

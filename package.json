@@ -1,6 +1,6 @@
 {
 	"name": "branch-deploy",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Deploy by pushing to a deploy* branch made simplier.",
 	"main": "index.js",
 	"type": "module",

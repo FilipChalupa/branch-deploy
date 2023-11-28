@@ -28,6 +28,18 @@ npx branch-deploy --help
 npx branch-deploy --all
 ```
 
+#### Push to specific branch
+
+```bash
+npx branch-deploy --target deploy/production
+```
+
+#### Push to multiple branches matching a pattern
+
+```bash
+npx branch-deploy --target deploy/*/beta
+```
+
 #### Use different branch prefix
 
 ```bash

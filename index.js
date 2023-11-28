@@ -16,6 +16,11 @@ program
 
 program
 	.option('-a, --all', 'push to all deploy branches', false)
+	.option(
+		'-t, --target <branch name or pattern>',
+		'push to specific branch or branches',
+		null,
+	)
 	.option('-p, --prefix <string>', 'filter branches by prefix', 'deploy')
 	.option('-r, --remote <name>', 'remote name', 'origin')
 	.option('-s, --source <hash>', 'commit hash to push', 'HEAD')
@@ -27,6 +32,7 @@ const options = program.opts()
 const remoteName = options.remote
 const branchNamePrefix = options.prefix
 const source = options.source
+const targetPattern = options.target
 
 const git = (() => {
 	try {
@@ -82,6 +88,19 @@ if (deployBranches.length === 0) {
 }
 
 const targetBranches = await (async () => {
+	if (targetPattern) {
+		const patternParts = targetPattern.split('/')
+		return deployBranches.filter((branch) => {
+			const branchParts = branch.split('/')
+			if (branchParts.length !== patternParts.length) {
+				return false
+			}
+			return patternParts.every(
+				(patternPart, index) =>
+					patternPart === '*' || patternPart === branchParts[index],
+			)
+		})
+	}
 	if (deployBranches.length === 1) {
 		// @TODO: ask for confirmation
 		return deployBranches

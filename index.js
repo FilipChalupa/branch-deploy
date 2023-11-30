@@ -71,26 +71,10 @@ const remoteBranches = (await git.branch(['-r'])).all.map((branch) =>
 		: branch,
 )
 
-const deployBranches = remoteBranches.filter(
-	(branch) =>
-		branch === branchNamePrefix || branch.startsWith(`${branchNamePrefix}/`),
-)
-
-if (deployBranches.length === 0) {
-	console.error(
-		chalk.red(
-			`Not a single deploy branch found in remote ${chalk.magenta(
-				remoteName,
-			)} starting with ${chalk.magenta(branchNamePrefix)}.`,
-		),
-	)
-	exit(1)
-}
-
 const targetBranches = await (async () => {
 	if (targetPattern) {
 		const patternParts = targetPattern.split('/')
-		return deployBranches.filter((branch) => {
+		return remoteBranches.filter((branch) => {
 			const branchParts = branch.split('/')
 			if (branchParts.length !== patternParts.length) {
 				return false
@@ -101,6 +85,23 @@ const targetBranches = await (async () => {
 			)
 		})
 	}
+
+	const deployBranches = remoteBranches.filter(
+		(branch) =>
+			branch === branchNamePrefix || branch.startsWith(`${branchNamePrefix}/`),
+	)
+
+	if (deployBranches.length === 0) {
+		console.error(
+			chalk.red(
+				`Not a single deploy branch found in remote ${chalk.magenta(
+					remoteName,
+				)} starting with ${chalk.magenta(branchNamePrefix)}.`,
+			),
+		)
+		exit(1)
+	}
+
 	if (deployBranches.length === 1) {
 		// @TODO: ask for confirmation
 		return deployBranches

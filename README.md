@@ -37,7 +37,7 @@ npx branch-deploy --target deploy/production
 #### Push to multiple branches matching a pattern
 
 ```bash
-npx branch-deploy --target deploy/*/beta
+npx branch-deploy --target "deploy/*/beta"
 ```
 
 #### Use different branch prefix

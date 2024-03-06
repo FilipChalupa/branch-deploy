@@ -64,7 +64,7 @@ npx branch-deploy --remote not-origin
 npx branch-deploy --force
 ```
 
-#### Force-with-lease
+#### Force with lease
 
 ```bash
 npx branch-deploy --force-with-lease

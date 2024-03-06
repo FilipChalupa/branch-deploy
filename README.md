@@ -57,3 +57,15 @@ npx branch-deploy --source 52ca70ea2076bd17aa93a5efceeda3a2834db801
 ```bash
 npx branch-deploy --remote not-origin
 ```
+
+#### Force
+
+```bash
+npx branch-deploy --force
+```
+
+#### Force-with-lease
+
+```bash
+npx branch-deploy --force-with-lease
+```

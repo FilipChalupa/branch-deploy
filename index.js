@@ -24,6 +24,8 @@ program
 	.option('-p, --prefix <string>', 'filter branches by prefix', 'deploy')
 	.option('-r, --remote <name>', 'remote name', 'origin')
 	.option('-s, --source <hash>', 'commit hash to push', 'HEAD')
+	.option('-f, --force', 'force push', false)
+	.option('--force-with-lease', 'force with lease push', false)
 
 program.parse(process.argv)
 
@@ -137,7 +139,10 @@ for (let i = 0; i < targetBranches.length; i++) {
 			targetBranch,
 		)}…`,
 	)
-	await git.push(remoteName, `${source}:${targetBranch}`)
+	await git.push(remoteName, `${source}:${targetBranch}`, {
+		...(options.force ? { '--force': null } : null),
+		...(options['force-with-lease'] ? { '--force-with-lease': null } : null),
+	})
 }
 
 console.log(chalk.green('Done. 🎉'))

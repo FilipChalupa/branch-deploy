@@ -141,7 +141,7 @@ for (let i = 0; i < targetBranches.length; i++) {
 	)
 	await git.push(remoteName, `${source}:${targetBranch}`, {
 		...(options.force ? { '--force': null } : null),
-		...(options['force-with-lease'] ? { '--force-with-lease': null } : null),
+		...(options['forceWithLease'] ? { '--force-with-lease': null } : null),
 	})
 }
 

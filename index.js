@@ -137,7 +137,7 @@ for (let i = 0; i < targetBranches.length; i++) {
 	console.log(
 		`${count}Pushing ${chalk.magenta(source)} to branch ${chalk.magenta(
 			targetBranch,
-		)}…`,
+		)}`,
 	)
 	await git.push(remoteName, `${source}:${targetBranch}`, {
 		...(options.force ? { '--force': null } : null),

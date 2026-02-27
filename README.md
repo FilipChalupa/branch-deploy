@@ -14,64 +14,16 @@ It will then find all branches named `deploy*` and let you choose which one to p
 
 ![demo screencast](https://raw.githubusercontent.com/FilipChalupa/branch-deploy/HEAD/screencast.gif)
 
-### Optional Options
+### Options
 
-#### Show help
-
-```bash
-npx branch-deploy --help
-```
-
-#### Push to all deploy branches
-
-```bash
-npx branch-deploy --all
-```
-
-#### Push to specific branch
-
-```bash
-npx branch-deploy --target deploy/production
-```
-
-#### Push to multiple branches matching a pattern
-
-```bash
-npx branch-deploy --target "deploy/*/beta"
-```
-
-#### Use different branch prefix
-
-```bash
-npx branch-deploy --prefix staging
-```
-
-#### Use different source commit
-
-```bash
-npx branch-deploy --source 52ca70ea2076bd17aa93a5efceeda3a2834db801
-```
-
-#### Use different remote name
-
-```bash
-npx branch-deploy --remote not-origin
-```
-
-#### Force
-
-```bash
-npx branch-deploy --force
-```
-
-#### Force with lease
-
-```bash
-npx branch-deploy --force-with-lease
-```
-
-#### Dry run
-
-```bash
-npx branch-deploy --dry
-```
+| Option                     | Description                                            | Example                                         |
+| -------------------------- | ------------------------------------------------------ | ----------------------------------------------- |
+| `--help`                   | Show help                                              | `npx branch-deploy --help`                      |
+| `--all`                    | Push to all deploy branches                            | `npx branch-deploy --all`                       |
+| `--target <branch/pattern>` | Push to specific branch or branches matching a pattern | `npx branch-deploy --target "deploy/*"`         |
+| `--prefix <string>`        | Filter branches by prefix                              | `npx branch-deploy --prefix staging`            |
+| `--source <hash>`          | Commit hash to push                                    | `npx branch-deploy --source 52ca70ea`           |
+| `--remote <name>`          | Remote name                                            | `npx branch-deploy --remote upstream`           |
+| `--force`                  | Force push                                             | `npx branch-deploy --force`                     |
+| `--force-with-lease`       | Force with lease push                                  | `npx branch-deploy --force-with-lease`          |
+| `--dry`                    | Dry run (don't push anything)                          | `npx branch-deploy --dry`                       |

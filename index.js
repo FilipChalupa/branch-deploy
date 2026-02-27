@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import { Command } from 'commander'
 import { readFile } from 'fs/promises'
-import inquirer from 'inquirer'
+import { checkbox } from '@inquirer/prompts'
 import { exit } from 'process'
 import simpleGit from 'simple-git'
 
@@ -113,14 +113,10 @@ const targetBranches = await (async () => {
 	if (options.all) {
 		return deployBranches
 	}
-	return (
-		await inquirer.prompt({
-			type: 'checkbox',
-			name: 'result',
-			message: `Which branch do you want ${chalk.magenta(source)} to push to?`,
-			choices: deployBranches,
-		})
-	).result
+	return await checkbox({
+		message: `Which branch do you want ${chalk.magenta(source)} to push to?`,
+		choices: deployBranches.map((branch) => ({ name: branch, value: branch })),
+	})
 })()
 
 if (targetBranches.length === 0) {

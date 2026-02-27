@@ -1,7 +1,7 @@
-import { checkbox } from '@inquirer/prompts'
 import chalk from 'chalk'
 import { Command } from 'commander'
 import { readFile } from 'fs/promises'
+import checkboxPlus from 'inquirer-checkbox-plus-plus'
 import { exit } from 'process'
 import simpleGit from 'simple-git'
 
@@ -113,9 +113,15 @@ const targetBranches = await (async () => {
 	if (options.all) {
 		return deployBranches
 	}
-	return await checkbox({
+	return await checkboxPlus({
 		message: `Which branch do you want ${chalk.magenta(source)} to push to?`,
-		choices: deployBranches.map((branch) => ({ name: branch, value: branch })),
+		searchable: true,
+		source: async (answersSoFar, input) => {
+			const searchTerm = (input || '').toLowerCase()
+			return deployBranches
+				.filter((branch) => branch.toLowerCase().includes(searchTerm))
+				.map((branch) => ({ name: branch, value: branch }))
+		},
 	})
 })()
 

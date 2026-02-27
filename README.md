@@ -69,3 +69,9 @@ npx branch-deploy --force
 ```bash
 npx branch-deploy --force-with-lease
 ```
+
+#### Dry run
+
+```bash
+npx branch-deploy --dry
+```

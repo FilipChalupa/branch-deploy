@@ -26,11 +26,13 @@ program
 	.option('-s, --source <hash>', 'commit hash to push', 'HEAD')
 	.option('-f, --force', 'force push', false)
 	.option('--force-with-lease', 'force with lease push', false)
+	.option('--dry', 'dry run', false)
 
 program.parse(process.argv)
 
 const options = program.opts()
 
+const dry = options.dry
 const remoteName = options.remote
 const branchNamePrefix = options.prefix
 const source = options.source
@@ -135,10 +137,15 @@ for (let i = 0; i < targetBranches.length; i++) {
 	const count =
 		targetBranches.length > 1 ? `[${i + 1}/${targetBranches.length}] ` : ''
 	console.log(
-		`${count}Pushing ${chalk.magenta(source)} to branch ${chalk.magenta(
-			targetBranch,
-		)}`,
+		`${count}${dry ? 'Would push' : 'Pushing'} ${chalk.magenta(
+			source,
+		)} to branch ${chalk.magenta(targetBranch)}`,
 	)
+
+	if (dry) {
+		continue
+	}
+
 	await git.push(remoteName, `${source}:${targetBranch}`, {
 		...(options.force ? { '--force': null } : null),
 		...(options['forceWithLease'] ? { '--force-with-lease': null } : null),

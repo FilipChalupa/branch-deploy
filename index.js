@@ -1,7 +1,7 @@
+import { checkbox } from '@inquirer/prompts'
 import chalk from 'chalk'
 import { Command } from 'commander'
 import { readFile } from 'fs/promises'
-import { checkbox } from '@inquirer/prompts'
 import { exit } from 'process'
 import simpleGit from 'simple-git'
 

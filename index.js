@@ -5,7 +5,9 @@ import checkboxPlus from 'inquirer-checkbox-plus-plus'
 import { exit } from 'process'
 import simpleGit from 'simple-git'
 
-const packageJson = JSON.parse(await readFile('package.json', 'utf8'))
+const packageJson = JSON.parse(
+	await readFile(new URL('./package.json', import.meta.url), 'utf8'),
+)
 
 const program = new Command()
 

@@ -4,7 +4,9 @@
 	"description": "Deploy by pushing to a deploy* branch made simplier.",
 	"main": "index.js",
 	"type": "module",
-	"bin": "bin/index.js",
+	"bin": {
+		"branch-deploy": "bin/index.js"
+	},
 	"scripts": {
 		"start": "node index.js"
 	},

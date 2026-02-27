@@ -78,53 +78,61 @@ const remoteBranches = (await git.branch(['-r'])).all.map((branch) =>
 )
 
 const targetBranches = await (async () => {
-	if (targetPattern) {
-		const patternParts = targetPattern.split('/')
-		return remoteBranches.filter((branch) => {
-			const branchParts = branch.split('/')
-			if (branchParts.length !== patternParts.length) {
-				return false
-			}
-			return patternParts.every(
-				(patternPart, index) =>
-					patternPart === '*' || patternPart === branchParts[index],
-			)
-		})
-	}
+	try {
+		if (targetPattern) {
+			const patternParts = targetPattern.split('/')
+			return remoteBranches.filter((branch) => {
+				const branchParts = branch.split('/')
+				if (branchParts.length !== patternParts.length) {
+					return false
+				}
+				return patternParts.every(
+					(patternPart, index) =>
+						patternPart === '*' || patternPart === branchParts[index],
+				)
+			})
+		}
 
-	const deployBranches = remoteBranches.filter(
-		(branch) =>
-			branch === branchNamePrefix || branch.startsWith(`${branchNamePrefix}/`),
-	)
-
-	if (deployBranches.length === 0) {
-		console.error(
-			chalk.red(
-				`Not a single deploy branch found in remote ${chalk.magenta(
-					remoteName,
-				)} starting with ${chalk.magenta(branchNamePrefix)}.`,
-			),
+		const deployBranches = remoteBranches.filter(
+			(branch) =>
+				branch === branchNamePrefix ||
+				branch.startsWith(`${branchNamePrefix}/`),
 		)
-		exit(1)
-	}
 
-	if (deployBranches.length === 1) {
-		// @TODO: ask for confirmation
-		return deployBranches
-	}
-	if (options.all) {
-		return deployBranches
-	}
-	return await checkboxPlus({
-		message: `Which branch do you want ${chalk.magenta(source)} to push to?`,
-		searchable: true,
-		source: async (answersSoFar, input) => {
-			const searchTerm = (input || '').toLowerCase()
+		if (deployBranches.length === 0) {
+			console.error(
+				chalk.red(
+					`Not a single deploy branch found in remote ${chalk.magenta(
+						remoteName,
+					)} starting with ${chalk.magenta(branchNamePrefix)}.`,
+				),
+			)
+			exit(1)
+		}
+
+		if (deployBranches.length === 1) {
+			// @TODO: ask for confirmation
 			return deployBranches
-				.filter((branch) => branch.toLowerCase().includes(searchTerm))
-				.map((branch) => ({ name: branch, value: branch }))
-		},
-	})
+		}
+		if (options.all) {
+			return deployBranches
+		}
+		return await checkboxPlus({
+			message: `Which branch do you want ${chalk.magenta(source)} to push to?`,
+			searchable: true,
+			source: async (answersSoFar, input) => {
+				const searchTerm = (input || '').toLowerCase()
+				return deployBranches
+					.filter((branch) => branch.toLowerCase().includes(searchTerm))
+					.map((branch) => ({ name: branch, value: branch }))
+			},
+		})
+	} catch (error) {
+		if (error.name === 'ExitPromptError') {
+			exit(0)
+		}
+		throw error
+	}
 })()
 
 if (targetBranches.length === 0) {
